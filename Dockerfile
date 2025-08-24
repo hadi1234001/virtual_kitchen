@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev
 
+# تثبيت امتدادات PHP للـ Database
+RUN docker-php-ext-install pdo pdo_mysql
+
 # تثبيت Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -27,7 +30,7 @@ RUN a2enmod rewrite
 # تعيين DocumentRoot إلى مجلد public
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# تثبيت مكتبات PHP
+# تثبيت مكتبات PHP الخاصة بالـ Laravel
 RUN composer install --no-dev --optimize-autoloader
 
 # إعداد صلاحيات التخزين و bootstrap/cache
