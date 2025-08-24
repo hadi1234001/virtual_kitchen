@@ -21,14 +21,18 @@ COPY . /var/www/html
 # تعيين مجلد العمل
 WORKDIR /var/www/html
 
+# تفعيل Rewrite لمودول Apache
+RUN a2enmod rewrite
+
+# تعيين DocumentRoot إلى مجلد public
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+
 # تثبيت مكتبات PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# إعداد صلاحيات التخزين والـ cache
+# إعداد صلاحيات التخزين و bootstrap/cache
 RUN chown -R www-data:www-data storage bootstrap/cache
-
-# تفعيل Rewrite لمودول Apache
-RUN a2enmod rewrite
+RUN chmod -R 775 storage bootstrap/cache
 
 # فتح البورت 10000 (Render يستخدم PORT الافتراضي)
 EXPOSE 10000
