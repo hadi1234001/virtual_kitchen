@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
 
 # تثبيت امتدادات PHP للـ Database
 RUN docker-php-ext-install pdo pdo_mysql
-
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 # تثبيت Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
